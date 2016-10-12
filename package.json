@@ -1,0 +1,31 @@
+{
+  "name": "kraska",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/PolymerElements/polymer-starter-kit.svg?branch=master)](https://travis-ci.org/PolymerElements/polymer-starter-kit)",
+  "main": "index.html",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "easyimage": "^2.1.0",
+    "express": "^4.14.0",
+    "mz": "^2.4.0",
+    "quickthumb": "0.0.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PNKBizz/kraska.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PNKBizz/kraska/issues"
+  },
+  "homepage": "https://github.com/PNKBizz/kraska#readme"
+}

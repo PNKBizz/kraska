@@ -1,0 +1,73 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="my-master">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: flex;
+                width: 300px;
+                min-height: 40px;;
+                justify-content: flex-end;
+                padding: 10px;
+                position: relative;
+            }
+
+            .name {
+                color: black;
+                background-color: white;
+                padding: 10px;
+                position: absolute;
+                z-index: 1;
+            }
+
+            iron-image {
+                width: 300px;
+                height: 300px;
+                transition: all .3s ease-in-out;
+            }
+
+            .hideFace iron-image {
+                width: 0;
+                height: 0;
+            }
+        </style>
+
+        <div class="name">
+            {{master.name}}
+        </div>
+        <div class="hideFace" id="face">
+            <iron-image src="/images/masters/{{master.path}}.jpg" alt="" sizing="cover"></iron-image>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-master',
+
+            properties: {
+                master: {
+                    type: String,
+                    reflectToAttribute: true
+                }
+            },
+
+            showFace: function () {
+                Polymer.dom(this.$.face).classList.remove('hideFace');
+            },
+
+            hideFace: function () {
+                Polymer.dom(this.$.face).classList.add('hideFace');
+            }
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,56 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="my-gallery">
+    <template>
+        <style  include="iron-flex iron-flex-alignment">
+            :host {
+                @apply(--layout-flex);
+                @apply(--layout-horizontal);
+                @apply(--layout-wrap);
+                overflow-y: auto;
+                max-height: calc(100vh - 250px);
+            }
+
+            .gallery-item {
+                @apply(--layout-flex);
+                min-width: 200px;
+                width: 250px;
+                height: 250px;
+                margin: 5px;
+            }
+        </style>
+
+        <template is="dom-repeat" items="{{masterGallery}}" class="horizontal layout wrap">
+            <iron-image src="{{item}}" sizing="cover" on-tap="_showPhoto" class="gallery-item"></iron-image>
+        </template>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-gallery',
+
+            _showPhoto: function (event) {
+                var fullsizeSrc = event.target.src.split('/thumbs').join('');
+                this.fire(
+                    'show-photo',
+                    {
+                        fullsizeSrc: fullsizeSrc,
+                        allImages: this.masterGallery.map(function (item) {
+                            return item.split('thumbs/')[1];
+                        })
+                    }
+                );
+            }
+        });
+    </script>
+</dom-module>

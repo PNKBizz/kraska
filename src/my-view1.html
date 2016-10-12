@@ -1,0 +1,185 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="my-master.html">
+<link rel="import" href="my-gallery.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view1">
+    <template>
+        <style include="iron-flex iron-flex-alignment shared-styles">
+            :host {
+                display: flex;
+                height: 100%;
+                margin-top: 50px;
+                --paper-yellow-a100: red;
+            }
+
+            .container {
+                display: flex;
+                @apply(--layout-flex);
+                height: 100%;
+            }
+
+            .container.vertical {
+                flex-direction: column;
+            }
+
+            .master-menu {
+                color: white;
+                text-align: center;
+                width: 100%;
+                margin-top: -50px;
+                position: relative;
+            }
+
+            .master-menu:before {
+                content: '';
+                height: 100%;
+                width: 150px;
+                background: linear-gradient(to right, black, transparent);
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 2;
+            }
+
+            .master-menu:after {
+                content: '';
+                height: 100%;
+                width: 150px;
+                background: linear-gradient(to left, black, transparent);
+                position: absolute;
+                right: 0;
+                top: 0;
+                z-index: 2;
+            }
+
+            .horizontal-menu-wrapper {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                border-top: 1px solid #222;
+                border-bottom: 1px solid #AAA;
+                background-color: black;
+            }
+
+            .horizontal-menu-wrapper span {
+                background-color: #0a3142;
+                padding: 10px;
+                margin: 10px;
+                color: white;
+                border-radius: 5px;
+            }
+
+            paper-tabs {
+                --paper-tabs: {
+                    color: white;
+                    background-color: black;
+                    height: 70px;
+                    border-bottom: 1px solid #222;
+                    width: 100%;
+                };
+                margin-top: -50px;
+            }
+        </style>
+
+        <iron-media-query query="(min-width: 1080px)" query-matches="{{queryMatches}}"></iron-media-query>
+        <div class="container" id="container">
+            <div hidden="{{!queryMatches}}">
+                <template is="dom-repeat" items="{{mastersArr}}">
+                    <my-master master="{{item}}" master-path="{{item.path}}" on-tap="showGallery"></my-master>
+                </template>
+            </div>
+            <!--<div id="masterMenu" class="master-menu" hidden="{{mobile}}">-->
+                <!--<div class="horizontal-menu-wrapper">-->
+                    <!--<template is="dom-repeat" items="{{mastersArr}}">-->
+                        <!--<span>{{item.name}}</span>-->
+                    <!--</template>-->
+                <!--</div>-->
+            <!--</div>-->
+            <paper-tabs selected="0" id="masterMenu" hidden="{{mobile}}">
+                <template is="dom-repeat" items="{{mastersArr}}">
+                    <paper-tab>{{item.name}}</paper-tab>
+                </template>
+            </paper-tabs>
+            <my-gallery master-gallery="{{masterGallery}}" class="flex"></my-gallery>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-view1',
+
+            properties: {
+                queryMatches: {
+                    type: Boolean,
+                    observer: '_queryObserver'
+                }
+            },
+
+            ready: function () {
+                this.mastersArr = [];
+                for (let key in this.data) {
+                    switch (key) {
+                        case 'denis':
+                            this.push('mastersArr', {name: "Денис Григорьев", path: key});
+                            break;
+                        case 'misha':
+                            this.push('mastersArr', {name: "Михаил Журавлев", path: key});
+                            break;
+                        case 'nastya':
+                            this.push('mastersArr', {name: "Настя Гриценко", path: key});
+                            break;
+                        case 'shwed':
+                            this.push('mastersArr', {name: "Сергей Чечев", path: key});
+                            break;
+                        case 'vaganov':
+                            this.push('mastersArr', {name: "Алексей Ваганов", path: key});
+                            break;
+                        case 'yurok':
+                            this.push('mastersArr', {name: "Юра Комедиант", path: key});
+                            break
+                    }
+                }
+                console.log(this.mastersArr);
+            },
+
+            showGallery: function (event) {
+                var self = this;
+                self._toggleFace(event.target)
+                    .then(function () {
+                        self.set(
+                            'masterGallery',
+                            self.data[event.target.masterPath].map(function (imgSrc) {
+                                return '/images/gallery/' + event.target.masterPath + '/thumbs/' + imgSrc;
+                        }))
+                    });
+            },
+
+            _toggleFace: function (currentNode) {
+                return new Promise(function (res, rej) {
+                    [].slice.call(Polymer.dom(currentNode).parentNode.children).forEach(function (node) {
+                        if (node.master) node.hideFace();
+                    });
+                    currentNode.showFace();
+                    res();
+                });
+            },
+
+            _queryObserver: function () {
+                this.toggleClass('hidden', this.queryMatches, this.$.masterMenu);
+                this.toggleClass('vertical', !this.queryMatches && this.mobile, this.$.container);
+            }
+        });
+
+    </script>
+</dom-module>
