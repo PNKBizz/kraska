@@ -27,11 +27,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 width: 250px;
                 height: 250px;
                 margin: 5px;
+                border: 1px solid rgba(100, 100, 100, .5);
+                background-color: black;
             }
         </style>
 
         <template is="dom-repeat" items="{{masterGallery}}" class="horizontal layout wrap">
-            <iron-image src="{{item}}" sizing="cover" on-tap="_showPhoto" class="gallery-item"></iron-image>
+            <iron-image src="{{item}}" sizing="cover" on-tap="_showPhoto" class="gallery-item" preload fade></iron-image>
         </template>
     </template>
 

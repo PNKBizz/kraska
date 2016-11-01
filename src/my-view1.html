@@ -154,13 +154,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             showGallery: function (event) {
-                var self = this;
+                var self = this,
+                    target = event.target;
                 self._toggleFace(event.target)
                     .then(function () {
                         self.set(
                             'masterGallery',
-                            self.data[event.target.masterPath].map(function (imgSrc) {
-                                return '/images/gallery/' + event.target.masterPath + '/thumbs/' + imgSrc;
+                            self.data[target.masterPath].map(function (imgSrc) {
+                                return '/images/gallery/' + target.masterPath + '/thumbs/' + imgSrc;
                         }))
                     });
             },
