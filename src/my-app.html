@@ -26,6 +26,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../bower_components/neon-animation/neon-animations.html">
 <link rel="import" href="my-icons.html">
@@ -46,8 +49,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             app-drawer {
                 --app-drawer-content-container: {
-                    background: #fff url('/images/logo_back.png');
-                    width: 245px;
+                    background: #fff url('/images/logotip_scull_black.png') right -81px top 40px no-repeat;
+                    width: 50vw;
                 }
             }
 
@@ -163,6 +166,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             }
 
+            paper-menu {
+                --paper-menu-background-color: {
+                    background-color: transparent;
+                }
+            }
+
         </style>
 
         <iron-ajax
@@ -179,6 +188,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 pattern="/:page"
                 data="{{routeData}}"
                 tail="{{subroute}}"></app-route>
+        <app-route
+                route="{{subroute}}"
+                pattern="/:master"
+                data="{{master}}"></app-route>
 
         <iron-media-query query="(min-width: 767px)" query-matches="{{queryMatches}}"></iron-media-query>
 
@@ -195,9 +208,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-drawer id="mobile_menu" swipe-open="{{!queryMatches}}">
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                <a name="view1" href="/#/view1">View One</a>
-                <a name="view2" href="/#/view2">View Two</a>
-                <a name="view3" href="/#/view3">View Three</a>
+                <paper-menu class="drawer_menu">
+                    <paper-submenu>
+                        <paper-item class="menu-trigger">Мастера</paper-item>
+                        <paper-menu class="menu-content">
+                            <paper-item>Денис Григорьев</paper-item>
+                            <paper-item>Михаил Журавлев</paper-item>
+                            <paper-item>Настя Гриценко</paper-item>
+                            <paper-item>Сергей Чечев</paper-item>
+                            <paper-item>Алексей Ваганов</paper-item>
+                            <paper-item>Юра Комедиант</paper-item>
+                        </paper-menu>
+                    </paper-submenu>
+                    <paper-item>Topic 1</paper-item>
+                    <paper-item>Topic 2</paper-item>
+                    <paper-item>Topic 3</paper-item>
+                </paper-menu>
             </iron-selector>
         </app-drawer>
 
@@ -226,7 +252,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     fallback-selection="view404"
                     class="flex"
                     role="main">
-                <my-view1 name="view1" data="{{data}}" mobile="{{!queryMatches}}"></my-view1>
+                <my-view1 name="view1" data="{{data}}" mobile="{{!queryMatches}}" master="{{master}}"></my-view1>
                 <my-view2 name="view2"></my-view2>
                 <my-view3 name="view3"></my-view3>
                 <my-view404 name="view404"></my-view404>
