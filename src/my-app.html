@@ -49,9 +49,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             app-drawer {
                 --app-drawer-content-container: {
-                    background: #fff url('/images/logotip_scull_black.png') right -81px top 40px no-repeat;
                     width: 50vw;
+                    overflow-x: hidden;
                 }
+            }
+
+            .drawer_menu_logo {
+                position: absolute;
+                top: 40px;
+                left: calc(50vw - 100px);
+                width: 200px;
+                height: 200px;
+                background: url('/images/logotip_scull_black.svg') no-repeat center top;
+                background-size: contain;
             }
 
             app-header {
@@ -206,6 +216,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-dialog>
 
         <app-drawer id="mobile_menu" swipe-open="{{!queryMatches}}">
+            <div class="drawer_menu_logo"></div>
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
                 <paper-menu class="drawer_menu">
