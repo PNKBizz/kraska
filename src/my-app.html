@@ -201,7 +201,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-route
                 route="{{subroute}}"
                 pattern="/:master"
-                data="{{master}}"></app-route>
+                data="{{subrouteData}}"></app-route>
 
         <iron-media-query query="(min-width: 767px)" query-matches="{{queryMatches}}"></iron-media-query>
 
@@ -223,12 +223,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <paper-submenu>
                         <paper-item class="menu-trigger">Мастера</paper-item>
                         <paper-menu class="menu-content">
-                            <paper-item>Денис Григорьев</paper-item>
-                            <paper-item>Михаил Журавлев</paper-item>
-                            <paper-item>Настя Гриценко</paper-item>
-                            <paper-item>Сергей Чечев</paper-item>
-                            <paper-item>Алексей Ваганов</paper-item>
-                            <paper-item>Юра Комедиант</paper-item>
+                            <template is="dom-repeat" items="{{mastersArr}}">
+                                <paper-item><a href="/#/master/{{item.path}}">{{item.name}}</a></paper-item>
+                            </template>
                         </paper-menu>
                     </paper-submenu>
                     <paper-item>Topic 1</paper-item>
@@ -247,8 +244,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                        class="drawer_button"></paper-icon-button>
                     <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation"
                                    hidden="{{!queryMatches}}">
-                        <a name="view1" href="/#/view1">View One</a>
-                        <a name="view2" href="/#/view2">View Two</a>
+                        <a name="view1" href="/#/view1">Наши работы</a>
+                        <a name="view2" href="/#/view2">О студии</a>
                         <span class="menu_spacer"></span>
                         <a name="view2" href="/#/view2">View Two</a>
                         <a name="view3" href="/#/view3">View Three</a>
@@ -263,7 +260,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     fallback-selection="view404"
                     class="flex"
                     role="main">
-                <my-view1 name="view1" data="{{data}}" mobile="{{!queryMatches}}" master="{{master}}"></my-view1>
+                <my-view1 name="view1" data="{{data}}" mobile="{{!queryMatches}}" master="{{subrouteData.master}}"></my-view1>
                 <my-view2 name="view2"></my-view2>
                 <my-view3 name="view3"></my-view3>
                 <my-view404 name="view404"></my-view404>
@@ -281,11 +278,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: String,
                     reflectToAttribute: true,
                     observer: '_pageChanged'
+                },
+                mastersArr: {
+                    type: Array,
+                    value: []
                 }
             },
 
             observers: [
-                '_routePageChanged(routeData.page)'
+                '_routePageChanged(routeData.page)',
+                '_masterChanged(subrouteData.master)'
             ],
 
             listeners: {
@@ -298,6 +300,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             handleResponse: function () {
                 console.log(this.data);
+                this.mastersArr = [];
+                for (let key in this.data) {
+                    switch (key) {
+                        case 'denis':
+                            this.push('mastersArr', {name: "Денис Григорьев", path: key});
+                            break;
+                        case 'misha':
+                            this.push('mastersArr', {name: "Михаил Журавлев", path: key});
+                            break;
+                        case 'nastya':
+                            this.push('mastersArr', {name: "Настя Гриценко", path: key});
+                            break;
+                        case 'shwed':
+                            this.push('mastersArr', {name: "Сергей Чечев", path: key});
+                            break;
+                        case 'vaganov':
+                            this.push('mastersArr', {name: "Алексей Ваганов", path: key});
+                            break;
+                        case 'yurok':
+                            this.push('mastersArr', {name: "Юра Комедиант", path: key});
+                            break
+                    }
+                }
+                console.log(this.mastersArr);
             },
 
             _routePageChanged: function (page) {
@@ -306,8 +332,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             _pageChanged: function (page) {
                 // Load page import on demand. Show 404 page if fails
+                console.log(page);
+                if (page === 'master') return;
                 var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
                 this.importHref(resolvedPageUrl, null, this._showPage404, true);
+            },
+
+            _masterChanged: function(master) {
+                this.set('path', '/master/' + master);
             },
 
             _showPage404: function () {

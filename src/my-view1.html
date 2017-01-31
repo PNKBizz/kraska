@@ -124,8 +124,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     type: Boolean,
                     observer: '_queryObserver'
                 },
-                master: String
+                master: {
+                    type: String,
+                    notify: true
+                }
             },
+
+            observers: [
+                '_masterChanged(master)'
+            ],
 
             ready: function () {
                 this.mastersArr = [];
@@ -180,6 +187,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             _queryObserver: function () {
                 this.toggleClass('hidden', this.queryMatches, this.$.masterMenu);
                 this.toggleClass('vertical', !this.queryMatches && this.mobile, this.$.container);
+            },
+
+            _masterChanged: function(master) {
+                console.log('master', master);
             }
         });
 
