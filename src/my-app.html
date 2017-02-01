@@ -147,6 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             paper-dialog#showPhoto {
                 background-color: transparent;
                 color: white;
+                max-width: 100vw;
                 @apply(--shadow-none);
             }
 
@@ -203,7 +204,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 pattern="/:master"
                 data="{{subrouteData}}"></app-route>
 
-        <iron-media-query query="(min-width: 767px)" query-matches="{{queryMatches}}"></iron-media-query>
+        <iron-media-query query="(min-width: 769px)" query-matches="{{queryMatches}}"></iron-media-query>
 
         <paper-dialog id="showPhoto" entry-animation="scale-up-animation" exit-animation="fade-out-animation"
                       with-backdrop>
@@ -224,7 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         <paper-item class="menu-trigger">Мастера</paper-item>
                         <paper-menu class="menu-content">
                             <template is="dom-repeat" items="{{mastersArr}}">
-                                <paper-item><a href="/#/master/{{item.path}}">{{item.name}}</a></paper-item>
+                                <paper-item><a href="/#/view1/{{item.path}}">{{item.name}}</a></paper-item>
                             </template>
                         </paper-menu>
                     </paper-submenu>
@@ -333,13 +334,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             _pageChanged: function (page) {
                 // Load page import on demand. Show 404 page if fails
                 console.log(page);
-                if (page === 'master') return;
                 var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
                 this.importHref(resolvedPageUrl, null, this._showPage404, true);
             },
 
             _masterChanged: function(master) {
-                this.set('path', '/master/' + master);
+                this.set('path', '/view1/' + master);
             },
 
             _showPage404: function () {

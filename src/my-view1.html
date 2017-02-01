@@ -29,10 +29,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 height: 100%;
             }
 
-            .container.vertical {
-                flex-direction: column;
-            }
-
             .master-menu {
                 color: white;
                 text-align: center;
@@ -92,6 +88,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
 
+        <app-location route="{{route}}" use-hash-as-path></app-location>
+
+        <iron-media-query query="(min-width: 1080px)" query-matches="{{queryMatches}}"></iron-media-query>
         <iron-media-query query="(min-width: 1080px)" query-matches="{{queryMatches}}"></iron-media-query>
         <div class="container" id="container">
             <div hidden="{{!queryMatches}}">
@@ -108,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <!--</div>-->
             <paper-tabs selected="0" id="masterMenu" hidden="{{mobile}}">
                 <template is="dom-repeat" items="{{mastersArr}}">
-                    <paper-tab>{{item.name}}</paper-tab>
+                    <paper-tab master-path="{{item.path}}" on-tap="showGallery">{{item.name}}</paper-tab>
                 </template>
             </paper-tabs>
             <my-gallery master-gallery="{{masterGallery}}" class="flex"></my-gallery>
@@ -164,18 +163,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             showGallery: function (event) {
                 var self = this,
                     target = event.target;
-                self._toggleFace(event.target)
-                    .then(function () {
-                        self.set(
-                            'masterGallery',
-                            self.data[target.masterPath].map(function (imgSrc) {
-                                return '/images/gallery/' + target.masterPath + '/thumbs/' + imgSrc;
-                        }))
-                    });
+                if (!this.mobile) {
+                    self.set('route.path', '/view1/' + target.masterPath);
+                } else {
+                    self._toggleFace(event.target)
+                        .then(function () {
+                            self.set('route.path', '/view1/' + target.masterPath);
+                        });
+                }
+            },
+
+            changeGalleryMaster: function(master) {
+                this.set(
+                    'masterGallery',
+                    this.data[master].filter(function(item) {
+                        return item !== 'thumbs';
+                    }).map(function (imgSrc) {
+                        return '/images/gallery/' + master + '/thumbs/' + imgSrc;
+                    }))
             },
 
             _toggleFace: function (currentNode) {
-                return new Promise(function (res, rej) {
+                return new Promise(function (res) {
                     [].slice.call(Polymer.dom(currentNode).parentNode.children).forEach(function (node) {
                         if (node.master) node.hideFace();
                     });
@@ -186,11 +195,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             _queryObserver: function () {
                 this.toggleClass('hidden', this.queryMatches, this.$.masterMenu);
-                this.toggleClass('vertical', !this.queryMatches && this.mobile, this.$.container);
+                this.toggleClass('vertical', !this.queryMatches && !this.mobile, this.$.container);
             },
 
             _masterChanged: function(master) {
-                console.log('master', master);
+                this.changeGalleryMaster(master);
             }
         });
 
